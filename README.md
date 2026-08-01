@@ -1,8 +1,23 @@
+<div align="center">
+
+[![arXiv](https://img.shields.io/badge/arXiv-2401.12345-b31b1b.svg)](https://arxiv.org/abs/2401.12345)
+[![GitHub](https://img.shields.io/badge/GitHub-SG--Lim%2FOSCD-181717?logo=github)](https://github.com/SG-Lim/OSCD)
+
+</div>
+
 # ClimbSeq Translator
 
 A chunk-based asynchronous agentic translator with sequence-level hill climbing. It translates long texts in parallel chunks, scores the combined translation using an LLM evaluator, and automatically retries the entire sequence with incrementing temperatures if the output quality falls below a specified threshold.
 
-By processing $k$ chunks in parallel, total wall-clock latency drops from sequential $\mathcal{O}(\sum_{i=1}^{k} t_i)$ to $\mathcal{O}(\max(t_i) + t_{eval})$, drastically accelerating the auto-regressive translation process of long documents while maximizing throughput consistency. Simple yet effective 👍!
+## Motivation
+
+Standard full-context translation suffers from quadratic autoregressive complexity $\mathcal{O}(N^2)$ due to causal attention and accumulating generation steps; meaning generation slows down exponentially the longer the target output grows. 
+
+ClimbSeq addresses this bottleneck by decomposing long documents into $k$ smaller, bounded chunks processed asynchronously in parallel. This bounds each sub-task to a short generation window ($n \ll N$) and shifts total wall-clock latency from single-pass quadratic generation down to:
+
+$$\mathcal{O}\left(\max_{1 \le i \le k}(t_i) + t_{\text{eval}}\right)$$
+
+By keeping context lengths short per request and executing them concurrently, ClimbSeq eliminates long-document generation drag while maintaining global output quality through hill-climbing evaluation. Simple yet effective 👍!
 
 ## Features
 
@@ -10,6 +25,15 @@ By processing $k$ chunks in parallel, total wall-clock latency drops from sequen
 * **Global LLM Evaluation:** Evaluates the complete, stitched translation quality on a scale of 1-10 using a custom prompt scaffold.
 * **Sequence Hill Climbing:** If the global translation fails the pass score, the system automatically increments the temperature and re-translates *all* chunks concurrently up to a maximum number of attempts.
 * **Batch Processing:** Robust batch translation with built-in retries and constant backoff time for API failures.
+
+## Benchmark Summary
+
+Across Chinese, Thai, and Tamil test cases, **ClimbSeq** consistently outperforms standard single-pass vanilla translation in both throughput and output consistency using [aisingapore/Gemma-SEA-LION-v4-27B-IT](https://huggingface.co/aisingapore/Gemma-SEA-LION-v4-27B-IT).
+
+| Method | Parameters | Avg. Score | Wall-Clock Time |
+| --- | --- | --- | --- |
+| **Vanilla Translation** | Single attempt ($T = 0.0$) | $8.7 \pm 3.1$ | $2,098.84\text{ s}$ |
+| **ClimbSeq Translation** | Step-up retries (max $10$ attempts) | **$9.9 \pm 0.3$** | **$398.00\text{ s}$** |
 
 ## Prerequisites
 

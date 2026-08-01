@@ -24,7 +24,7 @@ class AppConfig:
     # Translation Defaults & Tuning
     DEFAULT_DELIMITER: str = "\n\n"
     DEFAULT_LINES_PER_CHUNK: int = 10
-    DEFAULT_MAX_ATTEMPTS: int = 5
+    DEFAULT_MAX_ATTEMPTS: int = 10
     DEFAULT_PASS_SCORE: int = 8
     DEFAULT_INIT_TEMP: float = 0.0
     DEFAULT_INCREMENT_TEMP: float = 0.1

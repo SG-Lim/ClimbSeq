@@ -1,4 +1,5 @@
 import os
+import time
 import json
 import asyncio
 import logging
@@ -72,6 +73,7 @@ class AppConfig:
 
 async def run_pipeline(app_config: AppConfig):
     """Executes the core translation I/O pipeline using the provided configuration."""
+    pipeline_start_time = time.perf_counter()  # Start pipeline timer
     texts_to_translate = []
     
     # Read the extracted plain strings, unescaping them for accurate translation
@@ -97,6 +99,7 @@ async def run_pipeline(app_config: AppConfig):
         os.makedirs(app_config.args.output_dir, exist_ok=True)
         
         for lang_name in app_config.target_languages:
+            lang_start_time = time.perf_counter()  # Start per-language timer
             logger.info(f"Starting translation pass for: {lang_name.upper()}")
             
             lang_payload = [lang_name] * len(texts_to_translate)
@@ -120,8 +123,14 @@ async def run_pipeline(app_config: AppConfig):
                     # Escape internal newlines/quotes and strip outer quotes [1:-1]
                     escaped_trans_text = json.dumps(trans_text, ensure_ascii=False)[1:-1]
                     f.write(escaped_trans_text + "\n")
-                    
-        logger.info("Batch translation pipeline complete.")
+            
+            # Calculate and log per-language duration
+            lang_elapsed = time.perf_counter() - lang_start_time
+            logger.info(f"Completed {lang_name.upper()} translation pass in {lang_elapsed:.2f} seconds.")
+
+        # Calculate and log total pipeline duration
+        total_elapsed = time.perf_counter() - pipeline_start_time
+        logger.info(f"Batch translation pipeline complete in {total_elapsed:.2f} seconds.")
 
     finally:
         await client.close()
@@ -146,6 +155,7 @@ if __name__ == "__main__":
     TARGET_LANGUAGES = [
         "Chinese",
         "Thai",
+        "Tamil",
     ]
     
     asyncio.run(main(

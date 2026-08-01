@@ -1,8 +1,8 @@
-# climbseq
+# ClimbSeq Translator
 
 A chunk-based asynchronous agentic translator with sequence-level hill climbing. It translates long texts in parallel chunks, scores the combined translation using an LLM evaluator, and automatically retries the entire sequence with incrementing temperatures if the output quality falls below a specified threshold.
 
-By processing $k$ chunks in parallel, total wall-clock latency drops from sequential $\mathcal{O}(\sum_{i=1}^{k} t_i)$ to $\mathcal{O}(\max(t_i) + t_{eval})$, drastically accelerating the auto-regressive translation process of long documents. Simple yet effective 👍!
+By processing $k$ chunks in parallel, total wall-clock latency drops from sequential $\mathcal{O}(\sum_{i=1}^{k} t_i)$ to $\mathcal{O}(\max(t_i) + t_{eval})$, drastically accelerating the auto-regressive translation process of long documents while maximizing throughput consistency. Simple yet effective 👍!
 
 ## Features
 
@@ -57,5 +57,19 @@ Once your server is running and your `.secret` or `settings` dictionary is confi
 
 ```bash
 uv run src/main.py
+
+```
+
+## Credits
+
+If you use this repository or build upon our work, please consider citing our preprint:
+
+```bibtex
+@article{yourkey2026title,
+  title={Native Multilingual Chain-of-Thought Reasoning in Low-Resource Southeast Asian Languages},
+  author={Sean Gip Lim and William Chandra Tjhi and Hai Leong Chieu},
+  journal={arXiv preprint arXiv:XXXX.XXXXX},
+  year={2026}
+}
 
 ```

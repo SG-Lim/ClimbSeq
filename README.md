@@ -1,13 +1,16 @@
 <div align="center">
 
-[![arXiv](https://img.shields.io/badge/arXiv-2401.12345-b31b1b.svg)](https://arxiv.org/abs/2401.12345)
-[![GitHub](https://img.shields.io/badge/GitHub-SG--Lim%2FOSCD-181717?logo=github)](https://github.com/SG-Lim/OSCD)
+[![Hugging Face Models](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-yellow)](https://huggingface.co/sglim/models)
+[![Hugging Face Datasets](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Datasets-yellow)](https://huggingface.co/sglim/datasets)
+[![ArXiv Publication](https://img.shields.io/badge/ArXiv-Publication-B31B1B?logo=arxiv)](https://arxiv.org/abs/2608.00533)
+[![GitHub OSCD](https://img.shields.io/badge/GitHub-OSCD-blue?logo=github)](https://github.com/SG-Lim/OSCD)
+[![GitHub ClimbSeq](https://img.shields.io/badge/GitHub-ClimbSeq-blue?logo=github)](https://github.com/SG-Lim/ClimbSeq)
 
 </div>
 
-# ClimbSeq Translator
+# ClimbSeq Translator Framework
 
-A chunk-based asynchronous agentic translator with sequence-level hill climbing. It translates long texts in parallel chunks, scores the combined translation using an LLM evaluator, and automatically retries the entire sequence with incrementing temperatures if the output quality falls below a specified threshold.
+A chunk-based asynchronous agentic translator framework with sequence-level hill climbing. It translates long texts in parallel chunks, scores the combined translation using an LLM evaluator, and automatically retries the entire sequence with incrementing temperatures if the output quality falls below a specified threshold.
 
 ## Motivation
 
@@ -89,11 +92,14 @@ uv run src/main.py
 If you use this repository or build upon our work, please consider citing our preprint:
 
 ```bibtex
-@article{yourkey2026title,
-  title={Native Multilingual Chain-of-Thought Reasoning in Low-Resource Southeast Asian Languages},
-  author={Sean Gip Lim and William Chandra Tjhi and Hai Leong Chieu},
-  journal={arXiv preprint arXiv:XXXX.XXXXX},
-  year={2026}
+@misc{lim2026nativemultilingualchainofthoughtreasoning,
+      title={Native Multilingual Chain-of-Thought Reasoning in Low-Resource Southeast Asian Languages}, 
+      author={Sean Gip Lim and William Chandra Tjhi and Hai Leong Chieu},
+      year={2026},
+      eprint={2608.00533},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2608.00533}, 
 }
 
 ```

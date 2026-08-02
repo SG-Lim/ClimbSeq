@@ -74,8 +74,8 @@ class TranslatorClient:
         lines = text.split(DEFAULT_DELIMITER)
         chunks = []
         for i in range(0, len(lines), lines_per_chunk):
-            chunk = DEFAULT_DELIMITER.join(lines[i:i + lines_per_chunk]).strip()
-            if chunk: chunks.append(chunk)
+            chunk = DEFAULT_DELIMITER.join(lines[i:i + lines_per_chunk])
+            chunks.append(chunk)
         return chunks        
 
     async def get_session(self) -> aiohttp.ClientSession:
@@ -185,7 +185,7 @@ class TranslatorClient:
         max_temp = max_temp or DEFAULT_MAX_TEMP
         
         if not source_text or not source_text.strip():
-            return {"summary": source_text}
+            return {"new_snippet": source_text}
 
         lang_title = target_language.title()
         chunks = self.chunk_text(source_text, lines_per_chunk=lines_per_chunk)
@@ -200,6 +200,9 @@ class TranslatorClient:
             translations = [""] * len(chunks)
 
             async def _translate_chunk(idx: int, chunk: str):
+                if not chunk.strip():
+                    translations[idx] = chunk
+                    return
                 trans_system = self.scaffolds['translation']['system'].format(target_language=lang_title)
                 trans_user = self.scaffolds['translation']['user'].format(
                     source_text=chunk, target_language=lang_title
@@ -223,12 +226,11 @@ class TranslatorClient:
 
             # Exit early if we passed
             if highest_score >= pass_score:
-                return {"summary": DEFAULT_DELIMITER + best_translation.lstrip()}
-
+                return {"new_snippet": best_translation}
             attempt += 1
 
         logger.warning(f"Exhausted {max_attempts} attempts. Best score: {highest_score}/10.")
-        return {"summary": DEFAULT_DELIMITER + best_translation.lstrip()}
+        return {"new_snippet": best_translation}
 
     async def batch_translate(
         self, 

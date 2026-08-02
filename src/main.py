@@ -108,7 +108,7 @@ async def run_pipeline(app_config: AppConfig):
                 target_languages=lang_payload
             )
 
-            translated_texts = [res.get("summary", "").strip() for res in results]
+            translated_texts = [res.get("new_snippet", "").strip() for res in results]
             failed_count = sum(1 for text in translated_texts if not text)
             if failed_count > 0:
                 logger.warning(f"{failed_count} items resulted in empty translations for {lang_name}.")
